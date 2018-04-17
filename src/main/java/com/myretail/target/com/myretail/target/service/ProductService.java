@@ -10,5 +10,5 @@ public interface ProductService {
      * @param  productId - unique id of a product
      * @return
      */
-    ProductDetail getProductDetails(String productId);
+    ProductDetail getProductDetail(String productId);
 }

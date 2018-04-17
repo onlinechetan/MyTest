@@ -35,7 +35,7 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     @Override
-    public ProductDetail getProductDetails(String productId) {
+    public ProductDetail getProductDetail(String productId) {
         LOGGER.info("Executing service to get product details {}", productId);
         ProductDetail productDetail = new ProductDetail();
         HttpClient httpClient = HttpClientBuilder.create().build();

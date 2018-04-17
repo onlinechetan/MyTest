@@ -3,7 +3,6 @@
  */
 package com.myretail.target.com.myretail.target.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.myretail.target.com.myretail.target.dto.Price;
 import com.myretail.target.com.myretail.target.dto.ProductDetail;
 import com.myretail.target.com.myretail.target.dto.ProductResponse;
@@ -14,8 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 
 /**
  * Resource controller for working with products.
@@ -47,7 +44,7 @@ public class ProductsController {
         LOGGER.info("getting product details for {}", id);
         ProductResponse productResponse = new ProductResponse();
         //get product response
-        ProductDetail productDetail = productService.getProductDetails(id);
+        ProductDetail productDetail = productService.getProductDetail(id);
         LOGGER.debug("executed product service {}", productDetail.getId());
         productResponse.setId(productDetail.getId());
         productResponse.setName(productDetail.getTitle());

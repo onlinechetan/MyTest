@@ -4,6 +4,15 @@ Retrieves product details for a given product id and responses back to the calle
 
 Endpoint URL: http://localhost:8080/products/{productId}
 
+Technology Stack:
+
+Postman v6.0.10- Rest endoint response verification. Ref: https://www.getpostman.com
+Spring boot version 2.0.1.RELEASE Ref: https://start.spring.io/
+MongoDB version: 3.6.3 Ref: https://www.mongodb.com
+Mongo DB Compass community edition: Manually load no sql data.
+Unit test: Junit 4
+
+
 Response sample:
 Response:
 {
@@ -28,10 +37,16 @@ An error message will be send back to client containing error description and th
     "errorMessage": "Product not found, please check product id 138604281"
 }
 
-
+Example response for 200 OK http response status
  ---------------------------------
  ![Alt text](/Postman-200-OK.png?raw=true "GET information sucess")
 
+Example response for 404 OK http response status
+  ---------------------------------
+  ![Alt text](/Postman-404-NotFound.png?raw=true "GET information not found")
+
+Mongo DB myRetail.pricing collection
+  ![Alt text](/MongoDB-CompassEdition.png?raw=true "GET mongo DB compass community edition")
 
 
 
