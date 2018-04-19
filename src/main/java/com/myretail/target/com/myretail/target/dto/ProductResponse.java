@@ -1,5 +1,5 @@
-/**
- * Copyright header.
+/*
+  Copyright header.
  */
 package com.myretail.target.com.myretail.target.dto;
 
@@ -22,7 +22,6 @@ import java.util.List;
 public class ProductResponse {
     private String id;
     private String name;
-    //To match current expected contract from the client, will hold only one Price instance. To support multiple
-    // currency, will change to use List of Price.
+    //change it to List<Price> to hold multiple currency price.
     private Price currency_price;
 }

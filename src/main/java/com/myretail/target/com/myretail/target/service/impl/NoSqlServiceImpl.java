@@ -1,5 +1,5 @@
-/**
- * Copy right header.
+/*
+  Copy right header.
  */
 package com.myretail.target.com.myretail.target.service.impl;
 
@@ -33,11 +33,13 @@ public class NoSqlServiceImpl implements NoSqlService {
         Document pricing = (Document) document.first();
         ObjectMapper mapper = new ObjectMapper();
         Price price = new Price();
-        try {
-            price = mapper.readValue(pricing.toJson(),Price.class);
-        } catch (IOException e) {
-            throw new ProductInternalServerError("no sql server error while getting pricing information "
-                    +productId);
+        if(pricing!= null) {
+            try {
+                price = mapper.readValue(pricing.toJson(), Price.class);
+            } catch (IOException e) {
+                throw new ProductInternalServerError("no sql server error while getting pricing information "
+                        + productId);
+            }
         }
         LOGGER.debug("product id {}",pricing);
         return price;

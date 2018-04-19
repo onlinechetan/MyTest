@@ -1,10 +1,9 @@
-/**
- * Copyright header.
+/*
+  Copyright header.
  */
 package com.myretail.target.com.myretail.target.controller;
 
 import com.myretail.target.com.myretail.target.dto.Price;
-import com.myretail.target.com.myretail.target.dto.ProductDetail;
 import com.myretail.target.com.myretail.target.dto.ProductResponse;
 import com.myretail.target.com.myretail.target.service.NoSqlService;
 import com.myretail.target.com.myretail.target.service.ProductService;
@@ -26,11 +25,11 @@ public class ProductsController {
 
     /**
      * Constructor that initializes parameters.
-     * @param productService
-     * @param noSqlService
+     * @param productService instance of product service
+     * @param noSqlService instance of no sql service
      */
     @Autowired
-    public ProductsController(ProductService productService, NoSqlService noSqlService) {
+    ProductsController(ProductService productService, NoSqlService noSqlService) {
         this.productService = productService;
         this.noSqlService = noSqlService;
     }
@@ -42,18 +41,6 @@ public class ProductsController {
     @ResponseStatus(HttpStatus.OK)
     public ProductResponse product(@PathVariable(value="id") String id) {
         LOGGER.info("getting product details for {}", id);
-        ProductResponse productResponse = new ProductResponse();
-        //get product response
-        ProductDetail productDetail = productService.getProductDetail(id);
-        LOGGER.debug("executed product service {}", productDetail.getId());
-        productResponse.setId(productDetail.getId());
-        productResponse.setName(productDetail.getTitle());
-        //get price details from no sql
-        Price price = noSqlService.getProductPricing(id);
-        LOGGER.debug("Executed no sql service {} ", id);
-        price.setValue(price.getValue());
-        price.setCurrency_code(price.getCurrency_code());
-        productResponse.setCurrency_price(price);
-        return productResponse;
+        return  productService.getProductDetail(id);
     }
 }

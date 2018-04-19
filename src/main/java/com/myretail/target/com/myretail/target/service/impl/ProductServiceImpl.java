@@ -1,12 +1,15 @@
-/**
- * copyright headers.
+/*
+  copyright headers.
  */
 package com.myretail.target.com.myretail.target.service.impl;
 
 import com.jayway.jsonpath.JsonPath;
+import com.myretail.target.com.myretail.target.dto.Price;
 import com.myretail.target.com.myretail.target.dto.ProductDetail;
+import com.myretail.target.com.myretail.target.dto.ProductResponse;
 import com.myretail.target.com.myretail.target.exception.ProductInternalServerError;
 import com.myretail.target.com.myretail.target.exception.ProductNotFound;
+import com.myretail.target.com.myretail.target.service.NoSqlService;
 import com.myretail.target.com.myretail.target.service.ProductService;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -15,10 +18,14 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.concurrent.*;
 
 /**
  * The Product service that holds the logic for data handling with controller and repository.
@@ -26,7 +33,15 @@ import java.io.IOException;
 @Service
 public class ProductServiceImpl implements ProductService {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductServiceImpl.class);
+    @Autowired
+    private NoSqlService noSqlService;
 
+    private final ExecutorService pool = Executors.newFixedThreadPool(10);
+
+    @Bean
+    private HttpClient httpClient(){
+        return HttpClientBuilder.create().build();
+    }
     /**
      * {@inheritDoc}
      *
@@ -35,25 +50,38 @@ public class ProductServiceImpl implements ProductService {
      * @return
      */
     @Override
-    public ProductDetail getProductDetail(String productId) {
+    public ProductResponse getProductDetail(String productId) {
         LOGGER.info("Executing service to get product details {}", productId);
-        ProductDetail productDetail = new ProductDetail();
-        HttpClient httpClient = HttpClientBuilder.create().build();
+        ProductResponse productResponse = new ProductResponse();
+
         String url = "https://redsky.target.com/v1/pdp/tcin/"+ productId +"?excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics";
-        LOGGER.debug("get url: {}", url);
-        HttpGet get = new HttpGet(url);
         try {
-            HttpResponse response = httpClient.execute(get);
+            Future<HttpResponse> responseFuture = populateProductDetail(url);
+            //get details from no sql.
+            Price price = noSqlService.getProductPricing(productId);
+            productResponse.setCurrency_price(price);
+            //now get the response from rest end point.
+            HttpResponse response = responseFuture.get();
             String responseEntity  = EntityUtils.toString(response.getEntity());
             if (response.getStatusLine().getStatusCode() == HttpStatus.NOT_FOUND.value()){
                 throw new ProductNotFound("Product not found, please check product id " +productId);
             }
             String title = JsonPath.read(responseEntity, "$.product.item.product_description.title");
-            productDetail.setId(productId);
-            productDetail.setTitle(title);
-        } catch(IOException e) {
+            productResponse.setId(productId);
+            productResponse.setName(title);
+
+        } catch(IOException |InterruptedException| ExecutionException e) {
             throw new ProductInternalServerError("Server error while getting product details "+productId);
         }
-        return productDetail;
+        return productResponse;
+    }
+
+    @Async
+    private Future<HttpResponse> populateProductDetail(String url) {
+        return pool.submit(() -> {
+            LOGGER.debug("get url: {}", url);
+            HttpGet get = new HttpGet(url);
+            return httpClient().execute(get);
+        });
     }
 }
