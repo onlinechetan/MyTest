@@ -4,7 +4,7 @@ Retrieves product details for a given product id and responses back to the calle
 
 Endpoint URL: http://localhost:8080/products/{productId}
 
-Technology Stack:
+## Technology Stack:
 
 Postman v6.0.10- Rest endoint response verification. Ref: https://www.getpostman.com
 Spring boot version 2.0.1.RELEASE Ref: https://start.spring.io/
@@ -13,7 +13,7 @@ Mongo DB Compass community edition: Manually load no sql data.
 Unit test: Junit 4
 
 
-Response sample:
+## Response sample:
 Response:
 {
     "id": "13860428",
@@ -24,36 +24,34 @@ Response:
     }
 }
 
-HTTP Method: GET
+## HTTP Method: GET
 
 HTTP Response code:
 200 – Product details included
 404 – Product detail not found.
 500- Internal server error. For any unhandled exception occurred within application.
 
-Error handling:
+## Error handling:
 An error message will be send back to client containing error description and the product id. Here is sample error message for product information not found.
 {
     "errorMessage": "Product not found, please check product id 138604281"
 }
 
-Example response for 200 OK http response status
+## Example response for 200 OK http response status
  ---------------------------------
  ![Alt text](/Postman-200-OK.png?raw=true "GET information sucess")
 
 
-Example response for 200 OK http response status (Multiple currency)
+## Example response for 200 OK http response status (Multiple currency)
  ---------------------------------
  ![Alt text](/Postman-200-OK-multipleCurrency.PNG?raw=true "GET information sucess")
 
-Example response for 404 OK http response status
+## Example response for 404 OK http response status
   ---------------------------------
   ![Alt text](/Postman-404-NotFound.png?raw=true "GET information not found")
 
-Mongo DB myRetail.pricing collection
+## Mongo DB myRetail.pricing collection
   ![Alt text](/MongoDB-CompassEdition.png?raw=true "GET mongo DB compass community edition")
 
-
-
-
-
+## Unit test results
+  ![Alt text](/UnitTest.PNG?raw=true "Controller unit test")
