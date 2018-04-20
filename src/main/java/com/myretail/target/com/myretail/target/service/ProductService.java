@@ -1,6 +1,5 @@
 package com.myretail.target.com.myretail.target.service;
 
-import com.myretail.target.com.myretail.target.dto.ProductDetail;
 import com.myretail.target.com.myretail.target.dto.ProductResponse;
 
 /**

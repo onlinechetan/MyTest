@@ -22,6 +22,5 @@ import java.util.List;
 public class ProductResponse {
     private String id;
     private String name;
-    //change it to List<Price> to hold multiple currency price.
-    private Price currency_price;
+    private List<Price> currency_price;
 }

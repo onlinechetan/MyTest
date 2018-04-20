@@ -3,9 +3,7 @@
  */
 package com.myretail.target.com.myretail.target.controller;
 
-import com.myretail.target.com.myretail.target.dto.Price;
 import com.myretail.target.com.myretail.target.dto.ProductResponse;
-import com.myretail.target.com.myretail.target.service.NoSqlService;
 import com.myretail.target.com.myretail.target.service.ProductService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,17 +19,14 @@ import org.springframework.web.bind.annotation.*;
 public class ProductsController {
     private static final Logger LOGGER = LoggerFactory.getLogger(ProductsController.class);
     private final ProductService productService;
-    private NoSqlService noSqlService;
 
     /**
      * Constructor that initializes parameters.
      * @param productService instance of product service
-     * @param noSqlService instance of no sql service
      */
     @Autowired
-    ProductsController(ProductService productService, NoSqlService noSqlService) {
+    ProductsController(ProductService productService) {
         this.productService = productService;
-        this.noSqlService = noSqlService;
     }
 
     /**

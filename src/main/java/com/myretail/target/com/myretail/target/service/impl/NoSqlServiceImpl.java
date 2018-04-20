@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.mongodb.client.model.Filters.eq;
 
@@ -25,23 +27,26 @@ import static com.mongodb.client.model.Filters.eq;
 @Service
 public class NoSqlServiceImpl implements NoSqlService {
     private static final Logger LOGGER = LoggerFactory.getLogger(NoSqlServiceImpl.class);
+    private ObjectMapper mapper = new ObjectMapper();
 
-    public Price getProductPricing(String productId) {
+    public List<Price> getProductPricing(String productId) {
+        LOGGER.info("product id {}", productId);
+        List<Price> prices = new ArrayList<>();
         MongoClient mongoClient = new MongoClient("localhost", 27017);
         MongoDatabase database = mongoClient.getDatabase("myRetail");
-        FindIterable document =  database.getCollection("pricing").find(eq("productId",productId));
-        Document pricing = (Document) document.first();
-        ObjectMapper mapper = new ObjectMapper();
-        Price price = new Price();
-        if(pricing!= null) {
+        FindIterable<Document> document = database.getCollection("pricing").find(eq("productId",
+                productId));
+        Price price;
+        for (Document product : document) {
             try {
-                price = mapper.readValue(pricing.toJson(), Price.class);
+                price = mapper.readValue(product.toJson(), Price.class);
             } catch (IOException e) {
-                throw new ProductInternalServerError("no sql server error while getting pricing information "
-                        + productId);
+                throw new ProductInternalServerError("no sql server error while getting pricing " +
+                        "information " + productId);
             }
+            prices.add(price);
         }
-        LOGGER.debug("product id {}",pricing);
-        return price;
+        LOGGER.debug("Total prices found: {}", prices.size());
+        return prices;
     }
 }

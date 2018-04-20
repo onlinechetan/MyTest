@@ -41,6 +41,11 @@ Example response for 200 OK http response status
  ---------------------------------
  ![Alt text](/Postman-200-OK.png?raw=true "GET information sucess")
 
+
+Example response for 200 OK http response status (Multiple currency)
+ ---------------------------------
+ ![Alt text](/Postman-200-OK-multipleCurrency.PNG?raw=true "GET information sucess")
+
 Example response for 404 OK http response status
   ---------------------------------
   ![Alt text](/Postman-404-NotFound.png?raw=true "GET information not found")

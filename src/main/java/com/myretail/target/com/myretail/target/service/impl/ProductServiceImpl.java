@@ -4,8 +4,6 @@
 package com.myretail.target.com.myretail.target.service.impl;
 
 import com.jayway.jsonpath.JsonPath;
-import com.myretail.target.com.myretail.target.dto.Price;
-import com.myretail.target.com.myretail.target.dto.ProductDetail;
 import com.myretail.target.com.myretail.target.dto.ProductResponse;
 import com.myretail.target.com.myretail.target.exception.ProductInternalServerError;
 import com.myretail.target.com.myretail.target.exception.ProductNotFound;
@@ -25,7 +23,10 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-import java.util.concurrent.*;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * The Product service that holds the logic for data handling with controller and repository.
@@ -36,7 +37,7 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     private NoSqlService noSqlService;
 
-    private final ExecutorService pool = Executors.newFixedThreadPool(10);
+    private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 
     @Bean
     private HttpClient httpClient(){
@@ -58,8 +59,7 @@ public class ProductServiceImpl implements ProductService {
         try {
             Future<HttpResponse> responseFuture = populateProductDetail(url);
             //get details from no sql.
-            Price price = noSqlService.getProductPricing(productId);
-            productResponse.setCurrency_price(price);
+            productResponse.setCurrency_price(noSqlService.getProductPricing(productId));
             //now get the response from rest end point.
             HttpResponse response = responseFuture.get();
             String responseEntity  = EntityUtils.toString(response.getEntity());
@@ -78,8 +78,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Async
     private Future<HttpResponse> populateProductDetail(String url) {
-        return pool.submit(() -> {
-            LOGGER.debug("get url: {}", url);
+        LOGGER.debug("get url: {}", url);
+        return executorService.submit(() -> {
             HttpGet get = new HttpGet(url);
             return httpClient().execute(get);
         });

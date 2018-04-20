@@ -1,11 +1,10 @@
 package com.myretail.target.com.myretail.target.controller;
 
 import com.myretail.target.com.myretail.target.dto.Price;
-import com.myretail.target.com.myretail.target.dto.ProductDetail;
+import com.myretail.target.com.myretail.target.dto.ProductResponse;
 import com.myretail.target.com.myretail.target.exception.DefaultExceptionHandler;
 import com.myretail.target.com.myretail.target.exception.ProductInternalServerError;
 import com.myretail.target.com.myretail.target.exception.ProductNotFound;
-import com.myretail.target.com.myretail.target.service.NoSqlService;
 import com.myretail.target.com.myretail.target.service.ProductService;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,6 +12,8 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import java.util.Arrays;
 
 import static org.hamcrest.Matchers.equalTo;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -26,9 +27,6 @@ import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standal
 public class ProductsControllerTest {
     @Mock
     private ProductService productService;
-    @Mock
-    private NoSqlService noSqlService;
-
     private ProductsController productsController;
     private DefaultExceptionHandler defaultExceptionHandler;
 
@@ -36,7 +34,7 @@ public class ProductsControllerTest {
 
     @Before
     public void setUp() {
-        productsController = new ProductsController(productService, noSqlService);
+        productsController = new ProductsController(productService);
         defaultExceptionHandler = new DefaultExceptionHandler();
         mockMvc = standaloneSetup(productsController)
                 .setControllerAdvice(defaultExceptionHandler)
@@ -47,19 +45,29 @@ public class ProductsControllerTest {
      * Verify expected response after mocking service class.
      */
     @Test
-    public void testProductDetail()  {
-//        ProductDetail productDetail = new ProductDetail();
-//        productDetail.setId("15117729");
-//        productDetail.setTitle("The Big Lebowski (Blu-ray) (Widescreen)");
-//        when(productService.getProductDetail("15117729")).thenReturn(productDetail);
-//        Price price = new Price();
-//        price.setCurrency_code("USD");
-//        price.setValue(13.49);
-//        when(noSqlService.getProductPricing("15117729")).thenReturn(price);
-//        mockMvc.perform(get("/products/15117729"))
-//                .andExpect(jsonPath("$.id", equalTo("15117729")))
-//                .andExpect(jsonPath("$.name", equalTo("The Big Lebowski (Blu-ray) (Widescreen)")))
-//                .andReturn();
+    public void testProductDetail() throws Exception {
+        ProductResponse productResponse = new ProductResponse();
+        productResponse.setId("15117729");
+        productResponse.setName("The Big Lebowski (Blu-ray) (Widescreen)");
+
+        Price priceUSD = new Price();
+        priceUSD.setCurrency_code("USD");
+        priceUSD.setValue(13.49);
+
+        Price priceINR = new Price();
+        priceINR.setCurrency_code("INR");
+        priceINR.setValue(750.49);
+        productResponse.setCurrency_price(Arrays.asList(priceUSD, priceINR));
+        when(productService.getProductDetail("15117729")).thenReturn(productResponse);
+
+        mockMvc.perform(get("/products/15117729"))
+                .andExpect(jsonPath("$.id", equalTo("15117729")))
+                .andExpect(jsonPath("$.name", equalTo("The Big Lebowski (Blu-ray) (Widescreen)")))
+                .andExpect((jsonPath("$.currency_price[0].currency_code", equalTo("USD"))))
+                .andExpect((jsonPath("$.currency_price[0].value", equalTo(13.49))))
+                .andExpect((jsonPath("$.currency_price[1].currency_code", equalTo("INR"))))
+                .andExpect((jsonPath("$.currency_price[1].value", equalTo(750.49))))
+                .andReturn();
     }
 
     /**
