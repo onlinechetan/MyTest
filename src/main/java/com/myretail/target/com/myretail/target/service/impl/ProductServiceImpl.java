@@ -55,7 +55,8 @@ public class ProductServiceImpl implements ProductService {
         LOGGER.info("Executing service to get product details {}", productId);
         ProductResponse productResponse = new ProductResponse();
 
-        String url = "https://redsky.target.com/v1/pdp/tcin/"+ productId +"?excludes=taxonomy,price,promotion,bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics";
+        String url = "https://redsky.target.com/v1/pdp/tcin/" + productId + "?excludes=taxonomy,price,promotion," +
+                "bulk_ship,rating_and_review_reviews,rating_and_review_statistics,question_answer_statistics";
         try {
             Future<HttpResponse> responseFuture = populateProductDetail(url);
             //get details from no sql.
@@ -69,10 +70,10 @@ public class ProductServiceImpl implements ProductService {
             String title = JsonPath.read(responseEntity, "$.product.item.product_description.title");
             productResponse.setId(productId);
             productResponse.setName(title);
-
         } catch(IOException |InterruptedException| ExecutionException e) {
             throw new ProductInternalServerError("Server error while getting product details "+productId);
         }
+        LOGGER.debug("Returning Product response for: {}", productResponse.getId());
         return productResponse;
     }
 
