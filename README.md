@@ -107,7 +107,8 @@ Note: I used intellij to generate artifact output, here is the command, please a
 
 Project is developed as POC as expected during the first phase. Further enhancements  
 could be done for further development and production readiness.  
-	Meeting the Service Level Aggrements.  
+	Finalize contract for responses with multiple pricing currency.  
+   Meeting the Service Level Aggrements.  
    Automated e2e integration test cases using tools like Rest Assured.  
 	Addtional automated unit testing unit.  
    Support for encironments using profiles.  
