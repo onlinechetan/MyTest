@@ -79,7 +79,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Async
     private Future<HttpResponse> populateProductDetail(String url) {
-        LOGGER.debug("get url: {}", url);
+        LOGGER.info("get url: {}", url);
         return executorService.submit(() -> {
             HttpGet get = new HttpGet(url);
             return httpClient().execute(get);
