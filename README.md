@@ -72,11 +72,11 @@ create pricing collection
 > db.createCollection("pricing")
 { "ok" : 1 }    
 Insert data for get operations  
-> db.pricing.insert({productId: "13860428", currency_code: "USD", value:13.49})
+> db.pricing.insert({productId: "13860428", currency_code: "USD", value:13.49})  
 WriteResult({ "nInserted" : 1 })  
-> db.pricing.insert({productId: "13860428", currency_code: "INR", value:750})
+> db.pricing.insert({productId: "13860428", currency_code: "INR", value:750})  
 WriteResult({ "nInserted" : 1 })  
-> db.pricing.insert({productId: "16696652", currency_code: "USD", value:9.99})
+> db.pricing.insert({productId: "16696652", currency_code: "USD", value:9.99})  
 WriteResult({ "nInserted" : 1 })  
 
          
