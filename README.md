@@ -103,18 +103,19 @@ Note: I used intellij to generate artifact output, here is the command, please a
 3. Unit test located under: src\test folder.  
 
 
-## Considerations for productions deployment:
+## Considerations for productions deployment(not in priority order):
 
 Project is developed as POC as expected during the first phase. Further enhancements  
 could be done for further development and production readiness.  
-	Finalize contract for responses with multiple pricing currency.  
+	Finalize contract for responses with multiple pricing currency.
+   Support configurations. Ex: pricing URL and mongo db details could be moved to application.yml to configure as per the profile.  
+	Support containerization (docker image) and automation for build and deployments.Ex implement jenkins pipeline to progress deployments.    
    Meeting the Service Level Aggrements.  
+   Support application Monitoring  ex: Dynatrace, New relic.  
+   Implement log aggregator for the application. Ex: Splunk, Kibana.  
    Automated e2e integration test cases using tools like Rest Assured.  
 	Addtional automated unit testing unit.  
-   Support for encironments using profiles.  
+   Support for environments using profiles.  
 	Performance testing.  
-	Automation supports for build and deployments.  
 	Sonar and security scans.  
 	Disaster recovery plan and drills.  
-	Support documentations.
-
