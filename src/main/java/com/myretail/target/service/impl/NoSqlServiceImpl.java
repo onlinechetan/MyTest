@@ -39,15 +39,13 @@ public class NoSqlServiceImpl implements NoSqlService {
         List<Price> prices = new ArrayList<>();
 
         FindIterable<Document> pricings = productDAO.getProductPricings(productId);
-        Price price;
         for (Document pricing : pricings) {
             try {
-                price = mapper.readValue(pricing.toJson(), Price.class);
+                prices.add(mapper.readValue(pricing.toJson(), Price.class));
             } catch (IOException e) {
                 throw new ProductInternalServerError("no sql server error while getting pricing " +
                         "information " + productId);
             }
-            prices.add(price);
         }
         LOGGER.debug("Total prices found: {}", prices.size());
         return prices;
